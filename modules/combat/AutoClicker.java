@@ -105,7 +105,7 @@ public class AutoClicker extends Module {
 	int clickDelay;
 	boolean breaking = false; // se ta quebrando bloco
 	boolean attacking = false; // se ta atacando
-	boolean firstClick = true; // identificar se È primeiro click depois de segurar
+	boolean firstClick = true; // identificar se √© primeiro click depois de segurar
 
 	int attackCode, useCode;
 
@@ -153,7 +153,7 @@ public class AutoClicker extends Module {
 				clickTimer.reset();
 				setNewClickDelay();
 			} else {
-				// tempo passou, d· click
+				// tempo passou, d√° click
 				try {
 					if (clickTimer.hasTimePassed(clickDelay)) {
 						attacking = true;
@@ -208,11 +208,24 @@ public class AutoClicker extends Module {
 		}
 	});
 
-	// seta novo delay pra esperar pro proximo click
+// seta novo delay pra esperar pro proximo click
 	private void setNewClickDelay() {
-		// max È o menor, pode confundir
-		int max = 1000 / cpsMax;
-		int min = 1000 / cpsMin;
-		clickDelay = r.nextInt((min - max) + 1) + max;
+// Ensure cpsMax and cpsMin are valid (non-zero and cpsMax should not be smaller than cpsMin)
+if (cpsMax <= 0 || cpsMin <= 0) {
+    throw new IllegalArgumentException("CPS values must be greater than zero.");
+}
+if (cpsMax > cpsMin) {
+    throw new IllegalArgumentException("cpsMax should not be greater than cpsMin.");
+}
+
+int max = 1000 / cpsMax;
+int min = 1000 / cpsMin;
+
+// Ensure the min is greater than the max to avoid invalid range for nextInt
+if (min <= max) {
+    throw new IllegalArgumentException("The range for clickDelay is invalid.");
+}
+
+clickDelay = r.nextInt((min - max) + 1) + max;
 	}
 }
